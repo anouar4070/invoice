@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["daisyui"]
+  "cSpell.words": ["daisyui"],
+  "prisma.pinToPrisma6": true
 }
