@@ -1,20 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"] // Required for adapters
+  provider = "prisma-client-js"
 }
 
 datasource db {
-provider = "sqlite"
-  // url property MUST BE REMOVED when using prisma.config.ts in Prisma 7+
-  // url      = "file:./dev.db"  <-- Delete this line
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String    @id @default(uuid())
-  name     String
-  email    String    @unique
-  invoices Invoice[] @relation("UserInvoices")
+  id                String @id @default(uuid())
+  name              String
+  email             String @unique
+  invoices          Invoice[] @relation("UserInvoices")
 }
+
+
 
 model Invoice {
   id            String        @id
