@@ -1,6 +1,6 @@
 "use client";
 import { getInvoiceById } from "@/app/actions";
-// import InvoiceInfo from '@/app/components/InvoiceInfo'
+import InvoiceInfo from "@/app/components/InvoiceInfo";
 // import InvoiceLines from '@/app/components/InvoiceLines'
 // import InvoicePDF from '@/app/components/InvoicePDF'
 // import VATControl from '@/app/components/VATControl'
@@ -32,7 +32,7 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
       }
     };
     fetchInvoice();
-}, [params]);
+  }, [params]);
 
   // useEffect(() => {
   //   if (!invoice) return;
@@ -163,9 +163,9 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
                 <span>Total TTC</span>
                 <span> {totals.totalTTC.toFixed(2)} €</span>
               </div>
-            </div>
+            </div> */}
 
-            <InvoiceInfo invoice={invoice} setInvoice={setInvoice} /> */}
+            <InvoiceInfo invoice={invoice} setInvoice={setInvoice} />
           </div>
 
           <div className="flex w-full md:w-2/3 flex-col md:ml-4">
