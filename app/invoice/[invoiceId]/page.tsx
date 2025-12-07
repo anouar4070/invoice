@@ -10,7 +10,7 @@ import { Save, Trash } from "lucide-react";
 // import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
 
-const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
+const Page = ({ params }: { params: { invoiceId: string } }) => {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [initialInvoice, setInitialInvoice] = useState<Invoice | null>(null);
   // const [totals, setTotals] = useState<Totals | null>(null)
@@ -21,7 +21,7 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
   useEffect(() => {
     const fetchInvoice = async () => {
       try {
-        const { invoiceId } = await params;
+        const invoiceId = params.invoiceId;
         const fetchedInvoice = await getInvoiceById(invoiceId);
         if (fetchedInvoice) {
           setInvoice(fetchedInvoice);
@@ -32,7 +32,7 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
       }
     };
     fetchInvoice();
-  }, [params]);
+  }, [params.invoiceId]);
 
   // useEffect(() => {
   //   if (!invoice) return;
@@ -99,7 +99,7 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
           <p className="badge  badge-ghost badge-lg uppercase">
             <span>Facture-</span>
-            {invoice?.id}
+            {invoice?.id || "Chargement..."}
           </p>
           <div className="flex md:mt-0 mt-4">
             <select
@@ -175,7 +175,7 @@ const Page = ({ params }: { params: Promise<{ invoiceId: string }> }) => {
         </div>
       </div>
     </Wrapper>
-  );
+   );
 };
 
 export default Page;

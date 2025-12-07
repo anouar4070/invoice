@@ -37,34 +37,34 @@ interface Props {
                 >
                 </textarea>
 
-                {/* <h2 className='badge badge-accent'>Client</h2>
+                <h2 className='badge badge-accent'>Client</h2>
                 <input
                     type="text"
                     value={invoice?.clientName}
                     placeholder="Nom de l'entreprise cliente"
                     className='input input-bordered w-full resize-none'
                     required
-                    onChange={(e) => handleInputChange(e , 'clientName')}
+                    //onChange={(e) => handleInputChange(e , 'clientName')}
                     
-                /> */}
+                />
 
-                {/* <textarea
+                <textarea
                     value={invoice?.clientAddress}
                     placeholder="Adresse de l'entreprise cliente"
                     className='textarea textarea-bordered w-full resize-none h-40'
                     aria-rowcount={5}
                     required
-                    onChange={(e) => handleInputChange(e , 'clientAddress')}
+                    //onChange={(e) => handleInputChange(e , 'clientAddress')}
                 >
-                </textarea> */}
+                </textarea>
 
-                {/* <h2 className='badge badge-accent'>Date de la Facture</h2>
+                 <h2 className='badge badge-accent'>Date de la Facture</h2>
                 <input
                     type="date"
                     value={invoice?.invoiceDate}
                     className='input input-bordered w-full resize-none'
                     required
-                    onChange={(e) => handleInputChange(e , 'invoiceDate')}
+                    //onChange={(e) => handleInputChange(e , 'invoiceDate')}
                 />
 
                 <h2 className='badge badge-accent'>Date d'échéance</h2>
@@ -73,8 +73,8 @@ interface Props {
                     value={invoice?.dueDate}
                     className='input input-bordered w-full resize-none'
                     required
-                    onChange={(e) => handleInputChange(e , 'dueDate')}
-                /> */}
+                    //onChange={(e) => handleInputChange(e , 'dueDate')}
+                /> 
 
             </div> 
         </div>
