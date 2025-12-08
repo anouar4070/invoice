@@ -9,7 +9,8 @@ import { Invoice, Totals } from "@/type";
 import { Save, Trash } from "lucide-react";
 import VATControl from "../../components/VATControl";
 import InvoiceLines from "../../components/InvoiceLines";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function ClientInvoicePage() {
   const params = useParams(); // { invoiceId: string }
@@ -19,6 +20,7 @@ export default function ClientInvoicePage() {
   const [totals, setTotals] = useState<Totals | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+   const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -57,47 +59,56 @@ export default function ClientInvoicePage() {
   }, [invoice]);
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = parseInt(e.target.value)
+    const newStatus = parseInt(e.target.value);
     if (invoice) {
-      const updatedInvoice = { ...invoice, status: newStatus }
-      setInvoice(updatedInvoice)
+      const updatedInvoice = { ...invoice, status: newStatus };
+      setInvoice(updatedInvoice);
     }
-  }
+  };
 
   useEffect(() => {
     setIsSaveDisabled(
       JSON.stringify(invoice) === JSON.stringify(initialInvoice)
-    )
-  }, [invoice, initialInvoice])
+    );
+  }, [invoice, initialInvoice]);
 
   const handleSave = async () => {
     if (!invoice) return;
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await updateInvoice(invoice)
-      const updatedInvoice = await getInvoiceById(invoice.id)
+      await updateInvoice(invoice);
+      const updatedInvoice = await getInvoiceById(invoice.id);
       if (updatedInvoice) {
-        setInvoice(updatedInvoice)
-        setInitialInvoice(updatedInvoice)
+        setInvoice(updatedInvoice);
+        setInitialInvoice(updatedInvoice);
       }
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.error("Erreur lors de la sauvegarde de la facture :", error);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
-
-    if (confirmed) {
-      try {
-        await deleteInvoice(invoice?.id as string)
-        router.push("/")
-      } catch (error) {
-        console.error("Erreur lors de la suppression de la facture.", error);
-      }
+    try {
+      await deleteInvoice(invoice?.id as string);
+      router.push("/");
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la facture.", error);
     }
-  }
+  };
+
+  // const handleDelete = async () => {
+  //   const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
+
+  //   if (confirmed) {
+  //     try {
+  //       await deleteInvoice(invoice?.id as string)
+  //       router.push("/")
+  //     } catch (error) {
+  //       console.error("Erreur lors de la suppression de la facture.", error);
+  //     }
+  //   }
+  // }
 
   if (!invoice || !totals)
     return (
@@ -127,12 +138,12 @@ export default function ClientInvoicePage() {
               <option value={5}>Impayée</option>
             </select>
 
-            <button 
-            className="btn btn-sm btn-accent ml-4"
-            disabled={isSaveDisabled || isLoading}
-            onClick={handleSave}
+            <button
+              className="btn btn-sm btn-accent ml-4"
+              disabled={isSaveDisabled || isLoading}
+              onClick={handleSave}
             >
-               {isLoading ? (
+              {isLoading ? (
                 <span className="loading loading-spinner loading-sm"></span>
               ) : (
                 <>
@@ -140,14 +151,20 @@ export default function ClientInvoicePage() {
                   <Save className="w-4 ml-2" />
                 </>
               )}
-
             </button>
             <button
-             className="btn btn-sm btn-accent ml-4"
-             onClick={handleDelete}
-             >
+              className="btn btn-sm btn-accent ml-4"
+              onClick={() => setOpenModal(true)}
+            >
               <Trash className="w-4" />
             </button>
+            <ConfirmModal
+              open={openModal}
+              onClose={() => setOpenModal(false)}
+              onConfirm={handleDelete}
+              title="Supprimer la facture"
+              message="Êtes-vous sûr(e) de vouloir supprimer cette facture ?"
+            />
           </div>
         </div>
 
