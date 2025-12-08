@@ -2,15 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // <-- hook client
-import { getInvoiceById, updateInvoice } from "@/app/actions";
+import { deleteInvoice, getInvoiceById, updateInvoice } from "@/app/actions";
 import Wrapper from "@/app/components/Wrapper";
 import InvoiceInfo from "@/app/components/InvoiceInfo";
 import { Invoice, Totals } from "@/type";
 import { Save, Trash } from "lucide-react";
 import VATControl from "../../components/VATControl";
 import InvoiceLines from "../../components/InvoiceLines";
-// import InvoicePDF from '@/app/components/InvoicePDF'
-// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function ClientInvoicePage() {
   const params = useParams(); // { invoiceId: string }
@@ -20,7 +19,7 @@ export default function ClientInvoicePage() {
   const [totals, setTotals] = useState<Totals | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (!invoiceId) return;
@@ -87,18 +86,18 @@ export default function ClientInvoicePage() {
     }
   }
 
-  // const handleDelete = async () => {
-  //   const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
+  const handleDelete = async () => {
+    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
 
-  //   if (confirmed) {
-  //     try {
-  //       await deleteInvoice(invoice?.id as string)
-  //       router.push("/")
-  //     } catch (error) {
-  //       console.error("Erreur lors de la suppression de la facture.", error);
-  //     }
-  //   }
-  // }
+    if (confirmed) {
+      try {
+        await deleteInvoice(invoice?.id as string)
+        router.push("/")
+      } catch (error) {
+        console.error("Erreur lors de la suppression de la facture.", error);
+      }
+    }
+  }
 
   if (!invoice || !totals)
     return (
@@ -143,7 +142,10 @@ export default function ClientInvoicePage() {
               )}
 
             </button>
-            <button className="btn btn-sm btn-accent ml-4">
+            <button
+             className="btn btn-sm btn-accent ml-4"
+             onClick={handleDelete}
+             >
               <Trash className="w-4" />
             </button>
           </div>
