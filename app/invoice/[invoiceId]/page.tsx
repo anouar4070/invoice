@@ -5,13 +5,11 @@ import { useParams } from "next/navigation"; // <-- hook client
 import { getInvoiceById } from "@/app/actions";
 import Wrapper from "@/app/components/Wrapper";
 import InvoiceInfo from "@/app/components/InvoiceInfo";
-import { Invoice } from "@/type";
+import { Invoice, Totals } from "@/type";
 import { Save, Trash } from "lucide-react";
 import VATControl from "../../components/VATControl";
 import InvoiceLines from "../../components/InvoiceLines";
-// import InvoiceLines from '@/app/components/InvoiceLines'
 // import InvoicePDF from '@/app/components/InvoicePDF'
-// import VATControl from '@/app/components/VATControl'
 // import { useRouter } from 'next/navigation'
 
 export default function ClientInvoicePage() {
@@ -19,7 +17,7 @@ export default function ClientInvoicePage() {
   const invoiceId = params?.invoiceId as string;
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [initialInvoice, setInitialInvoice] = useState<Invoice | null>(null);
-  // const [totals, setTotals] = useState<Totals | null>(null)
+  const [totals, setTotals] = useState<Totals | null>(null);
   // const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   // const [isLoading, setIsLoading] = useState(false);
   // const router = useRouter();
@@ -40,15 +38,24 @@ export default function ClientInvoicePage() {
     fetchInvoice();
   }, [invoiceId]);
 
-  // useEffect(() => {
-  //if (!invoice) return;
-  // const ht = invoice.lines.reduce((acc, { quantity, unitPrice }) =>
-  //   acc + quantity * unitPrice, 0
-  // )
-  // const vat = invoice.vatActive ? ht * (invoice.vatRate / 100) : 0
-  // setTotals({ totalHT: ht, totalVAT: vat, totalTTC: ht + vat })
+  useEffect(() => {
+    if (!invoice) return;
 
-  //}, [invoice])
+    queueMicrotask(() => {
+      const ht = invoice.lines.reduce(
+        (acc, { quantity, unitPrice }) => acc + quantity * unitPrice,
+        0
+      );
+
+      const vat = invoice.vatActive ? ht * (invoice.vatRate / 100) : 0;
+
+      setTotals({
+        totalHT: ht,
+        totalVAT: vat,
+        totalTTC: ht + vat,
+      });
+    });
+  }, [invoice]);
 
   // const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   //   const newStatus = parseInt(e.target.value)
@@ -93,7 +100,7 @@ export default function ClientInvoicePage() {
   //   }
   // }
 
-  if (!invoice)
+  if (!invoice || !totals)
     return (
       <div className="flex justify-center items-center h-screen w-full ">
         <span className="font-bold">Facture Non Trouvée</span>
@@ -130,23 +137,38 @@ export default function ClientInvoicePage() {
         </div>
 
         <div className="flex flex-col md:flex-row w-full">
-
           <div className="flex w-full md:w-1/3 flex-col">
             <div className="mb-4 bg-base-200 rounded-xl p-5">
               <div className="flex justify-between items-center mb-4">
-                <div className="badge badge-accent">Résume des Totaux</div>
+                <div className="badge badge-accent">Résumé des Totaux</div>
                 <VATControl invoice={invoice} setInvoice={setInvoice} />
               </div>
+
+              <div className="flex justify-between">
+                <span>Total Hors Taxes</span>
+                <span> {totals.totalHT.toFixed(2)} DT</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>
+                  TVA ({invoice?.vatActive ? `${invoice?.vatRate}` : "0"} %)
+                </span>
+                <span> {totals.totalVAT.toFixed(2)} DT</span>
+              </div>
+
+              <div className="flex justify-between font-bold">
+                <span>Total TTC</span>
+                <span> {totals.totalTTC.toFixed(2)} DT</span>
+              </div>
             </div>
+
             <InvoiceInfo invoice={invoice} setInvoice={setInvoice} />
           </div>
 
           <div className="flex w-full md:w-2/3 flex-col md:ml-4">
-          <InvoiceLines invoice={invoice} setInvoice={setInvoice} />
+            <InvoiceLines invoice={invoice} setInvoice={setInvoice} />
           </div>
-          
         </div>
-
       </div>
     </Wrapper>
   );
