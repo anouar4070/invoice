@@ -57,13 +57,13 @@ export default function ClientInvoicePage() {
     });
   }, [invoice]);
 
-  // const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const newStatus = parseInt(e.target.value)
-  //   if (invoice) {
-  //     const updatedInvoice = { ...invoice, status: newStatus }
-  //     setInvoice(updatedInvoice)
-  //   }
-  // }
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = parseInt(e.target.value)
+    if (invoice) {
+      const updatedInvoice = { ...invoice, status: newStatus }
+      setInvoice(updatedInvoice)
+    }
+  }
 
   // useEffect(() => {
   //   setIsSaveDisabled(
@@ -119,6 +119,7 @@ export default function ClientInvoicePage() {
             <select
               className="select select-sm select-bordered w-full"
               value={invoice?.status}
+              onChange={handleStatusChange}
             >
               <option value={1}>Brouillon</option>
               <option value={2}>En attente</option>
