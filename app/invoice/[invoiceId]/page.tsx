@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; // <-- hook client
-import { getInvoiceById } from "@/app/actions";
+import { getInvoiceById, updateInvoice } from "@/app/actions";
 import Wrapper from "@/app/components/Wrapper";
 import InvoiceInfo from "@/app/components/InvoiceInfo";
 import { Invoice, Totals } from "@/type";
@@ -19,7 +19,7 @@ export default function ClientInvoicePage() {
   const [initialInvoice, setInitialInvoice] = useState<Invoice | null>(null);
   const [totals, setTotals] = useState<Totals | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // const router = useRouter();
 
   useEffect(() => {
@@ -71,21 +71,21 @@ export default function ClientInvoicePage() {
     )
   }, [invoice, initialInvoice])
 
-  // const handleSave = async () => {
-  //   if (!invoice) return;
-  //   setIsLoading(true)
-  //   try {
-  //     await updateInvoice(invoice)
-  //     const updatedInvoice = await getInvoiceById(invoice.id)
-  //     if (updatedInvoice) {
-  //       setInvoice(updatedInvoice)
-  //       setInitialInvoice(updatedInvoice)
-  //     }
-  //     setIsLoading(false)
-  //   } catch (error) {
-  //     console.error("Erreur lors de la sauvegarde de la facture :", error);
-  //   }
-  // }
+  const handleSave = async () => {
+    if (!invoice) return;
+    setIsLoading(true)
+    try {
+      await updateInvoice(invoice)
+      const updatedInvoice = await getInvoiceById(invoice.id)
+      if (updatedInvoice) {
+        setInvoice(updatedInvoice)
+        setInitialInvoice(updatedInvoice)
+      }
+      setIsLoading(false)
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde de la facture :", error);
+    }
+  }
 
   // const handleDelete = async () => {
   //   const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
@@ -130,9 +130,18 @@ export default function ClientInvoicePage() {
 
             <button 
             className="btn btn-sm btn-accent ml-4"
-            disabled={isSaveDisabled}
+            disabled={isSaveDisabled || isLoading}
+            onClick={handleSave}
             >
-              Sauvegarder <Save className="w-4 ml-2" />
+               {isLoading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                <>
+                  Sauvegarder
+                  <Save className="w-4 ml-2" />
+                </>
+              )}
+
             </button>
             <button className="btn btn-sm btn-accent ml-4">
               <Trash className="w-4" />
