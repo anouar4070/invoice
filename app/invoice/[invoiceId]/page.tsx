@@ -8,6 +8,7 @@ import InvoiceInfo from "@/app/components/InvoiceInfo";
 import { Invoice } from "@/type";
 import { Save, Trash } from "lucide-react";
 import VATControl from "../../components/VATControl";
+import InvoiceLines from "../../components/InvoiceLines";
 // import InvoiceLines from '@/app/components/InvoiceLines'
 // import InvoicePDF from '@/app/components/InvoicePDF'
 // import VATControl from '@/app/components/VATControl'
@@ -129,6 +130,7 @@ export default function ClientInvoicePage() {
         </div>
 
         <div className="flex flex-col md:flex-row w-full">
+
           <div className="flex w-full md:w-1/3 flex-col">
             <div className="mb-4 bg-base-200 rounded-xl p-5">
               <div className="flex justify-between items-center mb-4">
@@ -139,10 +141,12 @@ export default function ClientInvoicePage() {
             <InvoiceInfo invoice={invoice} setInvoice={setInvoice} />
           </div>
 
-          <div className="flex w-full md:w-2/3 flex-col">
-          
+          <div className="flex w-full md:w-2/3 flex-col md:ml-4">
+          <InvoiceLines invoice={invoice} setInvoice={setInvoice} />
           </div>
+          
         </div>
+
       </div>
     </Wrapper>
   );
