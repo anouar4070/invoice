@@ -2,17 +2,17 @@ import { Invoice } from '@/type'
 import React from 'react'
 
 interface Props {
-    invoice: Invoice | null
+    invoice: Invoice
     setInvoice: (invoice: Invoice) => void
 }
 
  const InvoiceInfo: React.FC<Props> = ({ invoice, setInvoice }) => {
 
-//     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
-//         setInvoice({ ...invoice, [field]: e.target.value });
-//     };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
+        setInvoice({ ...invoice, [field]: e.target.value });
+    };
 
-//     console.log(invoice)
+     console.log(invoice)
 
     return (
         <div className='flex flex-col h-fit bg-base-200 p-5 rounded-xl mb-4 md:mb-0'>
@@ -24,16 +24,16 @@ interface Props {
                     placeholder="Nom de l'entreprise émettrice"
                     className='input input-bordered w-full resize-none'
                     required
-                    //onChange={(e) => handleInputChange(e , 'issuerName')}
+                    onChange={(e) => handleInputChange(e , 'issuerName')}
                 />
 
                 <textarea
                     value={invoice?.issuerAddress}
                     placeholder="Adresse de l'entreprise émettrice"
                     className='textarea textarea-bordered w-full resize-none h-40'
-                    aria-rowcount={5}
+                    rows={5}
                     required
-                    //onChange={(e) => handleInputChange(e , 'issuerAddress')}
+                    onChange={(e) => handleInputChange(e , 'issuerAddress')}
                 >
                 </textarea>
 
@@ -44,7 +44,7 @@ interface Props {
                     placeholder="Nom de l'entreprise cliente"
                     className='input input-bordered w-full resize-none'
                     required
-                    //onChange={(e) => handleInputChange(e , 'clientName')}
+                    onChange={(e) => handleInputChange(e , 'clientName')}
                     
                 />
 
@@ -52,9 +52,9 @@ interface Props {
                     value={invoice?.clientAddress}
                     placeholder="Adresse de l'entreprise cliente"
                     className='textarea textarea-bordered w-full resize-none h-40'
-                    aria-rowcount={5}
+                    rows={5}
                     required
-                    //onChange={(e) => handleInputChange(e , 'clientAddress')}
+                    onChange={(e) => handleInputChange(e , 'clientAddress')}
                 >
                 </textarea>
 
@@ -64,7 +64,7 @@ interface Props {
                     value={invoice?.invoiceDate}
                     className='input input-bordered w-full resize-none'
                     required
-                    //onChange={(e) => handleInputChange(e , 'invoiceDate')}
+                    onChange={(e) => handleInputChange(e , 'invoiceDate')}
                 />
 
                 <h2 className='badge badge-accent'>Date d'échéance</h2>
@@ -73,7 +73,7 @@ interface Props {
                     value={invoice?.dueDate}
                     className='input input-bordered w-full resize-none'
                     required
-                    //onChange={(e) => handleInputChange(e , 'dueDate')}
+                    onChange={(e) => handleInputChange(e , 'dueDate')}
                 /> 
 
             </div> 
