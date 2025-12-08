@@ -18,7 +18,7 @@ export default function ClientInvoicePage() {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [initialInvoice, setInitialInvoice] = useState<Invoice | null>(null);
   const [totals, setTotals] = useState<Totals | null>(null);
-  // const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   // const [isLoading, setIsLoading] = useState(false);
   // const router = useRouter();
 
@@ -65,11 +65,11 @@ export default function ClientInvoicePage() {
     }
   }
 
-  // useEffect(() => {
-  //   setIsSaveDisabled(
-  //     JSON.stringify(invoice) === JSON.stringify(initialInvoice)
-  //   )
-  // }, [invoice, initialInvoice])
+  useEffect(() => {
+    setIsSaveDisabled(
+      JSON.stringify(invoice) === JSON.stringify(initialInvoice)
+    )
+  }, [invoice, initialInvoice])
 
   // const handleSave = async () => {
   //   if (!invoice) return;
@@ -128,7 +128,10 @@ export default function ClientInvoicePage() {
               <option value={5}>Impayée</option>
             </select>
 
-            <button className="btn btn-sm btn-accent ml-4">
+            <button 
+            className="btn btn-sm btn-accent ml-4"
+            disabled={isSaveDisabled}
+            >
               Sauvegarder <Save className="w-4 ml-2" />
             </button>
             <button className="btn btn-sm btn-accent ml-4">
