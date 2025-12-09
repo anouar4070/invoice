@@ -1,7 +1,9 @@
+"use client"
+
 import { Invoice, Totals } from "@/type";
-//import confetti from 'canvas-confetti'
-//import html2canvas from 'html2canvas-pro'
-//import jsPDF from 'jspdf'
+import confetti from "canvas-confetti";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
 import { ArrowDownFromLine, Layers } from "lucide-react";
 import React, { useRef } from "react";
 
@@ -11,64 +13,76 @@ interface FacturePDFProps {
 }
 
 function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-    return date.toLocaleDateString('fr-FR', options);
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("fr-FR", options);
 }
 
 const InvoicePDF: React.FC<FacturePDFProps> = ({ invoice, totals }) => {
-  // const factureRef = useRef<HTMLDivElement>(null)
+  const factureRef = useRef<HTMLDivElement>(null);
 
-  // const handleDownloadPdf = async () => {
-  //     const element = factureRef.current
-  //     if (element) {
-  //         try {
+  const handleDownloadPdf = async () => {
+  const element = factureRef.current;
+  if (!element) return;
 
-  //             const canvas = await html2canvas(element, { scale: 3, useCORS: true })
-  //             const imgData = canvas.toDataURL('image/png')
+  try {
+    const canvas = await html2canvas(element, { scale: 1.5, useCORS: false });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
 
-  //             const pdf = new jsPDF({
-  //                 orientation: "portrait",
-  //                 unit: "mm",
-  //                 format: "A4"
-  //             })
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-  //             const pdfWidth = pdf.internal.pageSize.getWidth()
-  //             const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+    if (imgHeight <= pageHeight) {
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, imgHeight);
+    } else {
+      // Multi-pages si très long
+      let heightLeft = imgHeight;
+      let position = 0;
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "JPEG", 0, -position, pdfWidth, imgHeight);
+        heightLeft -= pageHeight;
+        position += pageHeight;
+        if (heightLeft > 0) pdf.addPage();
+      }
+    }
 
-  //             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-  //             pdf.save(`facture-${invoice.name}.pdf`)
+    pdf.save(`facture-${invoice.name}.pdf`);
 
-  //             confetti({
-  //                 particleCount: 100,
-  //                 spread: 70,
-  //                 origin: { y: 0.6 },
-  //                 zIndex: 9999
-  //             })
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      zIndex: 9999,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la génération du PDF :", error);
+  }
+};
 
-  //         } catch (error) {
-  //             console.error('Erreur lors de la génération du PDF :', error);
-  //         }
-  //   }
-  //}
+
+
 
   return (
-    <div className="mt-4 hidden lg:block">
+    <div className="mt-4 lg:block">
       <div className="border-base-300 border-2 border-dashed rounded-xl p-5">
-
         <button
-          //onClick={handleDownloadPdf}
+          onClick={handleDownloadPdf}
           className="btn btn-sm btn-accent mb4"
         >
           Facture PDF
           <ArrowDownFromLine className="w-4" />
         </button>
 
-        <div className="p-8">
+        <div className="p-8" ref={factureRef}>
           <div className="flex justify-between items-center text-sm">
             <div className="flex flex-col">
               <div>
-
                 <div className="flex items-center">
                   <div className="bg-accent-content text-accent  rounded-full p-2">
                     <Layers className="h-6 w-6" />
@@ -77,7 +91,6 @@ const InvoicePDF: React.FC<FacturePDFProps> = ({ invoice, totals }) => {
                     In<span className="text-accent">Voice</span>
                   </span>
                 </div>
-                
               </div>
               <h1 className="text-7xl font-bold uppercase">Facture</h1>
             </div>
@@ -157,7 +170,6 @@ const InvoicePDF: React.FC<FacturePDFProps> = ({ invoice, totals }) => {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

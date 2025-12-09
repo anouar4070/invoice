@@ -98,19 +98,6 @@ export default function ClientInvoicePage() {
     }
   };
 
-  // const handleDelete = async () => {
-  //   const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
-
-  //   if (confirmed) {
-  //     try {
-  //       await deleteInvoice(invoice?.id as string)
-  //       router.push("/")
-  //     } catch (error) {
-  //       console.error("Erreur lors de la suppression de la facture.", error);
-  //     }
-  //   }
-  // }
-
   if (!invoice || !totals)
     return (
       <div className="flex justify-center items-center h-screen w-full ">
