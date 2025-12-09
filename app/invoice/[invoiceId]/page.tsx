@@ -11,6 +11,7 @@ import VATControl from "../../components/VATControl";
 import InvoiceLines from "../../components/InvoiceLines";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../../components/ConfirmModal";
+import InvoicePDF from "../../components/InvoicePDF";
 
 export default function ClientInvoicePage() {
   const params = useParams(); // { invoiceId: string }
@@ -96,19 +97,6 @@ export default function ClientInvoicePage() {
       console.error("Erreur lors de la suppression de la facture.", error);
     }
   };
-
-  // const handleDelete = async () => {
-  //   const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")
-
-  //   if (confirmed) {
-  //     try {
-  //       await deleteInvoice(invoice?.id as string)
-  //       router.push("/")
-  //     } catch (error) {
-  //       console.error("Erreur lors de la suppression de la facture.", error);
-  //     }
-  //   }
-  // }
 
   if (!invoice || !totals)
     return (
@@ -199,6 +187,7 @@ export default function ClientInvoicePage() {
 
           <div className="flex w-full md:w-2/3 flex-col md:ml-4">
             <InvoiceLines invoice={invoice} setInvoice={setInvoice} />
+            <InvoicePDF invoice={invoice} totals={totals} />
           </div>
         </div>
       </div>
