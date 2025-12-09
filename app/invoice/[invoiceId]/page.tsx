@@ -11,6 +11,7 @@ import VATControl from "../../components/VATControl";
 import InvoiceLines from "../../components/InvoiceLines";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../../components/ConfirmModal";
+import InvoicePDF from "../../components/InvoicePDF";
 
 export default function ClientInvoicePage() {
   const params = useParams(); // { invoiceId: string }
@@ -199,6 +200,7 @@ export default function ClientInvoicePage() {
 
           <div className="flex w-full md:w-2/3 flex-col md:ml-4">
             <InvoiceLines invoice={invoice} setInvoice={setInvoice} />
+            <InvoicePDF invoice={invoice} totals={totals} />
           </div>
         </div>
       </div>
