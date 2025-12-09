@@ -51,4 +51,4 @@ Clone the project:
 git clone https://github.com/anouar4070/invoice.git
 cd invoice
 npm install
-npm rundev
+npm run dev
