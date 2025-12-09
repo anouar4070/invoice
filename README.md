@@ -48,5 +48,7 @@ The app allows users to create, edit, list, and export invoices as PDF, with a c
 Clone the project:
 
 ```bash
-git clone https://github.com/your-user/invoice.git
+git clone https://github.com/anouar4070/invoice.git
 cd invoice
+npm install
+npm rundev
